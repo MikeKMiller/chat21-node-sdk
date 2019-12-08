@@ -6,7 +6,7 @@ var Message = function(config, single, plural){
   return {
     
 
-    send: function(sender_fullname, recipient_id, recipient_fullname, text, sender_id, attributes){
+    send: function(sender_fullname, recipient_id, recipient_fullname, text, sender_id, attributes, type, metadata){
        var message = {}
        if (sender_id) {
         message["sender_id"] = sender_id;
@@ -19,13 +19,21 @@ var Message = function(config, single, plural){
        if (attributes) {
         message["attributes"] = attributes;
        }
+
+       if (type) {
+        message["type"] = type;
+       }
+
+       if (metadata) {
+        message["metadata"] = metadata;
+       }
        
       return new Promise(function(resolve, reject){
 
         var admintoken = "";
         if (config.admintoken) {
          admintoken = "?token=" + config.admintoken;
-         console.log("admintoken", admintoken);
+         console.log("chat21-node-sdk admintoken", admintoken);
         }
 
         request.post('/' + plural + admintoken, message).then(function(data){
@@ -35,7 +43,7 @@ var Message = function(config, single, plural){
         })
       })
     },
-    sendToGroup: function(sender_fullname, recipient_id, recipient_fullname, text, sender_id, attributes){
+    sendToGroup: function(sender_fullname, recipient_id, recipient_fullname, text, sender_id, attributes, type, metadata){
       var message = {}
       if (sender_id) {
         message["sender_id"] = sender_id;
@@ -49,7 +57,18 @@ var Message = function(config, single, plural){
       if (attributes) {
         message["attributes"] = attributes;
        }
+
+       if (type) {
+        message["type"] = type;
+       }
+
        
+       if (metadata) {
+        message["metadata"] = metadata;
+       }
+       
+       
+      console.log("chat21-node-sdk message.sendToGroup", message);
      return new Promise(function(resolve, reject){
 
       var admintoken = "";
@@ -58,8 +77,10 @@ var Message = function(config, single, plural){
        }
        
        request.post('/' + plural + admintoken, message).then(function(data){
+        console.log("chat21-node-sdk message.sent", data);
          resolve(data)
        }).catch(function(err){
+        console.log("chat21-node-sdk message.sent error", data);
          reject(err)
        })
      })
